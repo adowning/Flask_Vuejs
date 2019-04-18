@@ -1,0 +1,85 @@
+<html>
+    <head>
+        <title>My Website!</title>
+        <link rel="stylesheet" href="/static/css/styles.css">
+        <script src="https://unpkg.com/vue"></script>
+    </head>
+    
+    <div id="app">
+        <div><video ref="video" id="video" width="640" height="480" autoplay></video></div>
+        <div><button id="snap" v-on:click="capture()">Snap Photo</button></div>
+        <canvas ref="canvas" id="canvas" width="640" height="480"></canvas>
+        <ul>
+            <li v-for="c in captures">
+                <img v-bind:src="c" height="50" />
+            </li>
+        </ul>
+    </div>
+    
+     <div id="imageUpload">
+      <img v-bind:src="previewImage" class="uploading-image" />
+      <input type="file" accept="image/jpeg" @change=uploadImage>
+   </div>
+<script>
+var webcam = new Vue({ 
+        el: "#app",
+        data() {
+            return {
+                video: {},
+                canvas: {},
+                captures: []
+            }
+        },
+        mounted() {
+        this.video = this.$refs.video;
+        if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+                // this.video.src = window.URL.createObjectURL(stream);
+                video.srcObject = stream;
+                this.video.play();
+        });
+    }
+},
+        methods: {
+    capture() {
+        this.canvas = this.$refs.canvas;
+        var context = this.canvas.getContext("2d").drawImage(this.video, 0, 0, 640, 480);
+        var t =  canvas.toDataURL("image/png");
+        this.captures.push(t);
+        // fetch('/result', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Accept': 'application/json',
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify(t)
+        //     })
+        //     .then(response => response.json())
+        //     .then(data => t = data);
+    }
+}
+});
+
+var image = new Vue({ 
+        el:"#imageUpload",
+        data(){
+            return{
+               previewImage:null
+            }
+        },
+        methods:{
+            uploadImage(e){
+                const image = e.target.files[0];
+                const reader = new FileReader();
+                reader.readAsDataURL(image);
+                reader.onload = e =>{
+                    this.previewImage = e.target.result;
+                    console.log(this.previewImage);
+                };
+            }
+        }
+});
+</script>
+
+</html>
+
