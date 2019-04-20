@@ -46,16 +46,22 @@ var webcam = new Vue({
         var context = this.canvas.getContext("2d").drawImage(this.video, 0, 0, 640, 480);
         var t =  canvas.toDataURL("image/png");
         this.captures.push(t);
-        // fetch('/result', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Accept': 'application/json',
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify(t)
-        //     })
-        //     .then(response => response.json())
-        //     .then(data => t = data);
+
+        fetch('http://127.0.0.1/result', {
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            mode: "cors", // no-cors, cors, *same-origin
+            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            //credentials: "same-origin", // include, *same-origin, omit
+            headers: {
+                "Content-Type": "application/json",
+                // "Content-Type": "application/x-www-form-urlencoded",
+            },
+            canvas_data: JSON.stringify(t),
+            redirect: "follow", // manual, *follow, error
+            referrer: "no-referrer", // no-referrer, *client
+            // body: JSON.stringify(t), // body data type must match "Content-Type" header
+        })
+        .then(response => response.json()); // parses JSON response into native Javascript objects 
     }
 }
 });

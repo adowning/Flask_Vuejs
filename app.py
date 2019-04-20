@@ -21,13 +21,12 @@ def index():
     # return jsonify('pong!')
     return render_template('index.html')
     
-@app.route('/result', methods=['POST','GET'])
+@app.route('/result', methods=['POST'])
 def res():
-    # if request.method == 'POST':
-    #     result = request.t
-    #     return render_template("result.html",result = result)
-    if request.method == 'GET':
-        return render_template("result.html")
+    if request.method == 'POST':
+        response = request.canvas_data
+        print(response)
+        return render_template("result.html",result = response)
 
 
 if __name__ == '__main__': 
